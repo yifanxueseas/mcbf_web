@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <!-- TODO: Replace with your paper title and author names -->
+  <meta name="title"
+    content="No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance - Yifan Xue and Nadia Figueroa">
+  <!-- TODO: Write a compelling 150-160 character description of your research -->
+  <meta name="description"
+    content="Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control due to their applicability to general control-affine systems and their ability to enforce constraints through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference, and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with few or no local minima, but they lack a principled mechanism for enforcing input constraints and are typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general control-affine systems operating in dynamic, cluttered environments.">
+  <!-- TODO: Add 5-10 relevant keywords for your research area -->
+  <meta name="keywords"
+    content="concave obstacles, dynamical systems, control barrier functions, real-time motion and path planning, dynamic obstacles, collision avoidance, nonholonomic motion planning">
+  <!-- TODO: List all authors -->
+  <meta name="author" content="Yifan XUe, Nadia Figueroa">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <!-- TODO: Replace with your institution or lab name -->
+  <meta property="og:site_name" content="Figueroa Robotics Lab @ Penn">
+  <!-- TODO: Same as paper title above -->
+  <meta property="og:title"
+    content="No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance">
+  <!-- TODO: Same as description above -->
+  <meta property="og:description"
+    content="Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control due to their applicability to general control-affine systems and their ability to enforce constraints through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference, and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with few or no local minima, but they lack a principled mechanism for enforcing input constraints and are typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general control-affine systems operating in dynamic, cluttered environments.">
+  <!-- TODO: Replace with your actual website URL -->
+  <meta property="og:url" content="https://yifanxueseas.github.io/mcbf_controller/">
+  <!-- TODO: Create a 1200x630px preview image and update path -->
+  <meta property="og:image"
+    content="https://github.com/yifanxueseas/mcbf_controller/tree/gh-pages/static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt"
+    content="No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance - Research Preview">
+  <meta property="article:published_time" content="2026-01-03T23:44:32Z">
+  <meta property="article:author" content="Yifan Xue">
+  <meta property="article:author" content="Nadia Figueroa">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="concave obstacles">
+  <meta property="article:tag" content="dynamical systems">
+  <meta property="article:tag" content="control barrier functions">
+  <meta property="article:tag" content="real-time motion and path planning">
+  <meta property="article:tag" content="dynamic obstacles">
+  <meta property="article:tag" content="collision avoidance">
+  <meta property="article:tag" content="nonholonomic motion planning">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- TODO: Replace with your lab/institution Twitter handle -->
+  <meta name="twitter:site" content="@YOUR_TWITTER_HANDLE">
+  <!-- TODO: Replace with first author's Twitter handle -->
+  <meta name="twitter:creator" content="@AUTHOR_TWITTER_HANDLE">
+  <!-- TODO: Same as paper title above -->
+  <meta name="twitter:title"
+    content="No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance">
+  <!-- TODO: Same as description above -->
+  <meta name="twitter:description"
+    content="Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control due to their applicability to general control-affine systems and their ability to enforce constraints through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference, and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with few or no local minima, but they lack a principled mechanism for enforcing input constraints and are typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general control-affine systems operating in dynamic, cluttered environments.">
+  <!-- TODO: Same as social preview image above -->
+  <meta name="twitter:image"
+    content="https://github.com/yifanxueseas/mcbf_controller/tree/gh-pages/static/images/social_preview.png">
+  <meta name="twitter:image:alt"
+    content="No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance - Research Preview">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title"
+    content="No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance">
+  <meta name="citation_author" content="Xue, Yifan">
+  <meta name="citation_author" content="Figueroa, Nadia">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="arXiv preprint">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2502.14238">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://documentcloud.adobe.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+
+  <!-- TODO: Replace with your paper title and authors -->
+  <title>No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic
+    Collision Avoidance - Yifan Xue and Nadia Figueroa | Academic Research</title>
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/logo.ico">
+  <link rel="apple-touch-icon" href="static/images/logo.ico">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts - Optimized loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance",
+    "description": "Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control due to their applicability to general control-affine systems and their ability to enforce constraints through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference, and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with few or no local minima, but they lack a principled mechanism for enforcing input constraints and are typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general control-affine systems operating in dynamic, cluttered environments.",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Yifan Xue",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Department of Mechanical Engineering and Applied Mechanics, University of Pennsylvania"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Nadia Figueroa",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Department of Mechanical Engineering and Applied Mechanics, University of Pennsylvania"
+        }
+      }
+    ],
+    "datePublished": "2026-01-03",
+    "publisher": {
+      "@type": "Organization",
+      "name": "arXiv preprint"
+    },
+    "url": "https://yifanxueseas.github.io/mcbf_controller/",
+    "image": "https://github.com/yifanxueseas/mcbf_controller/tree/gh-pages/static/images/social_preview.png",
+    "keywords": ["concave obstacles", "dynamical systems", "control barrier functions", "real-time motion and path planning", "dynamic obstacles", "collision avoidance", "nonholonomic motion planning"],
+    "abstract": "Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control due to their applicability to general control-affine systems and their ability to enforce constraints through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference, and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with few or no local minima, but they lack a principled mechanism for enforcing input constraints and are typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general control-affine systems operating in dynamic, cluttered environments.",
+    "citation": "@misc{xue2026minimacollisionscombiningmodulation,
+      title={No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance}, 
+      author={Yifan Xue and Nadia Figueroa},
+      year={2026},
+      eprint={2502.14238},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2502.14238}, 
+}",
+    "isAccessibleForFree": true,
+    "license": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+    "mainEntity": {
+      "@type": "WebPage",
+      "@id": "https://yifanxueseas.github.io/mcbf_controller/"
+    },
+    "about": [
+      {
+        "@type": "Thing",
+        "name": "Concave Obstacles"
+      },
+      {
+        "@type": "Thing", 
+        "name": "Dynamical Systems"
+      },
+      {
+        "@type": "Thing", 
+        "name": "Control Barrier Functions"
+      },
+      {
+        "@type": "Thing", 
+        "name": "Real-Time Motion and Path Planning"
+      },
+      {
+        "@type": "Thing", 
+        "name": "Dynamic Obstacles"
+      },
+      {
+        "@type": "Thing", 
+        "name": "Collision Avoidance, nonholonomic motion planning"
+      },
+      {
+        "@type": "Thing", 
+        "name": "Nonholonomic Motion Planning"
+      },
+    ]
+  }
+  </script>
+
+  <!-- Website/Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Figueroa Robotics Lab @ Penn",
+    "url": "https://nbfigueroa.github.io/",
+    "logo": "https://github.com/yifanxueseas/mcbf_controller/tree/gh-pages/static/images/logo.ico",
+    "sameAs": [
+      "https://twitter.com/YOUR_TWITTER_HANDLE",
+      "https://github.com/penn-figueroa-lab"
+    ]
+  }
+  </script>
+
+  <!-- Math font -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+  <style>
+    .subtle-gray {
+      background-color: #ebebeb;
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- More Works Dropdown -->
+  <div class="more-works-container">
+    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
+      <i class="fas fa-flask"></i>
+      More Works
+      <i class="fas fa-chevron-down dropdown-arrow"></i>
+    </button>
+    <div class="more-works-dropdown" id="moreWorksDropdown">
+      <div class="dropdown-header">
+        <h4>Related Works from Our Lab</h4>
+        <button class="close-btn" onclick="toggleMoreWorks()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="works-list">
+        <!-- TODO: Replace with your lab's related works -->
+        <a href="https://arxiv.org/abs/2503.02208" class="work-item" target="_blank">
+          <div class="work-info">
+            <!-- TODO: Replace with actual paper title -->
+            <h5>ADMM-MCBF-LCA: A Layered Control Architecture for Safe Real-Time Navigation</h5>
+            <!-- TODO: Replace with brief description -->
+            <p>We consider the problem of safe real-time navigation of a robot in a dynamic environment with moving
+              obstacles of arbitrary smooth geometries and input saturation constraints. We assume that the robot
+              detects and models nearby obstacle boundaries with a short-range sensor and that this detection is
+              error-free. This problem presents three main challenges: i) input constraints, ii) safety, and iii)
+              real-time computation. To tackle all three challenges, we present a layered control architecture (LCA)
+              consisting of an offline path library generation layer, and an online path selection and safety layer. To
+              overcome the limitations of reactive methods, our offline path library consists of feasible controllers,
+              feedback gains, and reference trajectories. To handle computational burden and safety, we solve online
+              path selection and generate safe inputs that run at 100 Hz. Through simulations on Gazebo and Fetch
+              hardware in an indoor environment, we evaluate our approach against baselines that are layered,
+              end-to-end, or reactive. Our experiments demonstrate that among all algorithms, only our proposed LCA is
+              able to complete tasks such as reaching a goal, safely.</p>
+            <!-- TODO: Replace with venue and year -->
+            <span class="work-venue">IEEE International Conference on Robotics and Automation (ICRA) 2025</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <!-- TODO: Add more related works or remove extra items -->
+        <a href="https://arxiv.org/abs/2601.10233" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>Proactive Local-Minima-Free Robot Navigation: Blending Motion Prediction with Safe Control</h5>
+            <p>This work addresses the challenge of safe and efficient mobile robot navigation in complex dynamic
+              environments with concave moving obstacles. Reactive safe controllers like Control Barrier Functions
+              (CBFs) design obstacle avoidance strategies based only on the current states of the obstacles, risking
+              future collisions. To alleviate this problem, we use Gaussian processes to learn barrier functions online
+              from multimodal motion predictions of obstacles generated by neural networks trained with energy-based
+              learning. The learned barrier functions are then fed into quadratic programs using modulated CBFs (MCBFs),
+              a local-minimum-free version of CBFs, to achieve safe and efficient navigation. The proposed framework
+              makes two key contributions. First, it develops a prediction-to-barrier function online learning pipeline.
+              Second, it introduces an autonomous parameter tuning algorithm that adapts MCBFs to deforming,
+              prediction-based barrier functions. The framework is evaluated in both simulations and real-world
+              experiments, consistently outperforming baselines and demonstrating superior safety and efficiency in
+              crowded dynamic environments.</p>
+            <span class="work-venue">Under Review</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://arxiv.org/abs/2311.02576" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>Towards Feasible Dynamic Grasping: Leveraging Gaussian Process Distance Field, SE(3) Equivariance and
+              Riemannian Mixture Models</h5>
+            <p>This paper introduces a novel approach to improve robotic grasping in dynamic environments by integrating
+              Gaussian Process Distance Fields (GPDF), SE(3) equivariant networks, and Riemannian Mixture Models. The
+              aim is to enable robots to grasp moving objects effectively. Our approach comprises three main components:
+              object shape reconstruction, grasp sampling, and implicit grasp pose selection. GPDF accurately models the
+              shape of objects, which is essential for precise grasp planning. SE(3) equivariance ensures that the
+              sampled grasp poses are equivariant to the object's pose changes, enhancing robustness in dynamic
+              scenarios. Riemannian Gaussian Mixture Models are employed to assess reachability, providing a feasible
+              and adaptable grasping strategies. Feasible grasp poses are targeted by novel task or joint space reactive
+              controllers formulated using Gaussian Mixture Models and Gaussian Processes. This method resolves the
+              challenge of discrete grasp pose selection, enabling smoother grasping execution. Experimental validation
+              confirms the effectiveness of our approach in generating feasible grasp poses and achieving successful
+              grasps in dynamic environments. By integrating these advanced techniques, we present a promising solution
+              for enhancing robotic grasping capabilities in real-world scenarios.</p>
+            <span class="work-venue">IEEE International Conference on Robotics and Automation (ICRA) 2024</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <!-- TODO: Replace with your paper title -->
+              <h1 class="title is-1 publication-title">No Minima, No Collisions: Combining Modulation and Control
+                Barrier Function Strategies for Feasible Dynamic Collision Avoidance</h1>
+              <div class="is-size-5 publication-authors">
+                <!-- TODO: Replace with your paper authors and their personal links -->
+                <span class="author-block">
+                  <a href="https://scholar.google.com/citations?hl=en&user=yCawUccAAAAJ" target="_blank">Yifan
+                    Xue</a>,</span>
+                <span class="author-block">
+                  <a href="https://scholar.google.com/citations?user=1NQRXHQAAAAJ&hl=en" target="_blank">Nadia
+                    Figueroa</a></span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <!-- TODO: Replace with your institution and conference/journal info -->
+                <span class="author-block">Department of Mechanical Engineering and Applied Mechanics, University of
+                  Pennsylvania<br>Under Review</span>
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <!-- TODO: Update with your arXiv paper ID -->
+                  <span class="link-block">
+                    <a href="https://arxiv.org/pdf/2502.14238" target="_blank"
+                      class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Paper</span>
+                    </a>
+                  </span>
+
+                  <!-- TODO: Add your supplementary material PDF or remove this section -->
+                  <!-- <span class="link-block">
+                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
+                      class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Supplementary</span>
+                    </a>
+                  </span> -->
+
+                  <!-- TODO: Replace with your GitHub repository URL -->
+                  <span class="link-block">
+                    <a href="https://github.com/YOUR REPO HERE" target="_blank"
+                      class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>Code</span>
+                    </a>
+                  </span>
+
+                  <!-- TODO: Update with your arXiv paper ID -->
+                  <span class="link-block">
+                    <a href="https://arxiv.org/abs/2502.14238" target="_blank"
+                      class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="ai ai-arxiv"></i>
+                      </span>
+                      <span>arXiv</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Teaser video-->
+    <section class="hero teaser">
+      <div class="container is-max-desktop">
+        <div class="hero-body">
+          <!-- TODO: Replace with your teaser video -->
+          <video poster="" id="tree" autoplay controls muted loop height="100%" preload="metadata">
+            <!-- TODO: Add your video file path here -->
+            <source src="static/videos/mcbf_submission.mp4" type="video/mp4">
+          </video>
+          <!-- TODO: Replace with your video description -->
+          <h2 class="subtitle has-text-centered">
+            We validate the proposed MCBF-QP controllers in simulated hospital settings and in real-world experiments on
+            fully actuated Ridgeback robots and underactuated Fetch platforms. Across all evaluations, Modulated CBF-QPs
+            consistently outperform standard CBF-QPs.
+          </h2>
+        </div>
+      </div>
+    </section>
+    <!-- End teaser video -->
+
+    <!-- <div class="container is-max-desktop" id="table-of-contents">
+      <h2 class="title is-3 has-text-link">Table of Contents</h2>
+      <ul>
+        <li><a href="#abstract">Abstract</a></li>
+        <li><a href="#simulations">Gazebo & Python Simulations</a></li>
+        <li><a href="#hardware-experiments">Hardware Experiments</a></li>
+        <li><a href="#results-summary">Results Summary</a></li>
+        <li><a href="#bibtex">BibTeX Citation</a></li>
+      </ul>
+    </div> -->
+
+
+    <div class="container" id="table-of-contents">
+      <div class="box" style="background-color: #f0f8ff; border-left: 4px solid #2563eb;">
+        <h2 class="title is-4 has-text-link">Table of Contents</h2>
+        <div class="content">
+          <ul>
+            <li><a href="#abstract">Abstract</a></li>
+            <li><a href="#simulations">Gazebo & Python Simulations</a></li>
+            <li><a href="#hardware-experiments">Hardware Experiments</a></li>
+            <li><a href="#results-summary">Results Summary</a></li>
+            <li><a href="#bibtex">BibTeX Citation</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical spacing -->
+    <section class="section"></section>
+
+
+    <!-- Paper abstract -->
+    <section class="section hero subtle-gray" id="abstract">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <!-- TODO: Replace with your paper abstract -->
+              <p>
+                Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control
+                due to their applicability to general control-affine systems and their ability to enforce constraints
+                through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to
+                task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference,
+                and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with
+                few or no local minima, but they lack a principled mechanism for enforcing input constraints and are
+                typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches
+                showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the
+                CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections
+                motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation
+                variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general
+                control-affine systems operating in dynamic, cluttered environments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End paper abstract -->
+
+
+    <!-- Image carousel -->
+    <!-- <section class="hero is-small">
+      <div class="hero-body">
+        <div class="container">
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="item">
+              <img src="static/images/fetch.png" alt="First research result visualization" loading="lazy" />
+              <h2 class="subtitle has-text-centered">
+                Underactuated Fetch robot.
+              </h2>
+            </div>
+            <div class="item">
+              <img src="static/images/ridgeback.png" alt="Second research result visualization" loading="lazy" />
+              <h2 class="subtitle has-text-centered">
+                Fully actuated Ridgeback robot.
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <!-- End image carousel -->
+
+
+
+    <!-- Youtube video -->
+    <!-- <section class="hero is-small subtle-gray">
+      <div class="hero-body">
+        <div class="container">
+          <h2 class="title is-3">Video Presentation</h2>
+          <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+
+              <div class="publication-video">
+                <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0"
+                  allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <!-- End youtube video -->
+
+    <section class="hero" id="simulations">
+      <div class="hero-body">
+        <div class="container">
+
+          <!-- Section Title -->
+          <div class="has-text-left">
+            <h2 class="title is-2 has-text-link">Gazebo & Python Simulations</h2>
+          </div>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+
+                <div class="has-text-centered">
+                  <h2 class="title is-3">Hospital: Fully Actuated</h2>
+
+                  <video controls muted loop preload="metadata" style="max-width:100%; height:auto; margin-top:1rem;">
+                    <source src="static/videos/fully_hospital_reference.mp4" type="video/mp4">
+                  </video>
+                  <p class="subtitle is-5">Video 1: Reference MCBF-QP Demonstration against CBF-QP and reference Mod-DS
+                  </p>
+                </div>
+
+                <div class="has-text-centered">
+                  <video controls muted loop preload="metadata" style="max-width:100%; height:auto; margin-top:3rem;">
+                    <source src="static/videos/fully_hospital_onm.mp4" type="video/mp4">
+                  </video>
+                  <p class="subtitle is-5">Video 2: on-Manifold MCBF-QP Demonstration against CBF-QP and on-Manifold
+                    Mod-DS
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+
+                <div class="has-text-centered">
+                  <h2 class="title is-3">Hospital: Underactuated</h2>
+
+                  <video controls muted loop preload="metadata" style="max-width:100%; height:auto; margin-top:1rem;">
+                    <source src="static/videos/under_hospital_S.mp4" type="video/mp4">
+                  </video>
+                  <p class="subtitle is-5">Video 1: Shifted on-Manifold MCBF-QP Demonstration against Shifted CBF-QP</p>
+                </div>
+
+                <div class="has-text-centered">
+                  <video controls muted loop preload="metadata" style="max-width:100%; height:auto; margin-top:3rem;">
+                    <source src="static/videos/under_hospital_A.mp4" type="video/mp4">
+                  </video>
+                  <p class="subtitle is-5">Video 2: Augumented on-Manifold MCBF-QP Demonstration against Augmented
+                    CBF-QP</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+                <div class="has-text-centered">
+                  <h2 class="title is-3">Social Navigation</h2>
+                </div>
+
+
+                <figure class="has-text-centered">
+                  <img src="static/images/social_nav_group.svg" alt="Social navigation performance comparison"
+                    loading="lazy" style="width: 70%;" />
+
+                  <figcaption class="subtitle is-5" style="text-align: left;">
+                    <strong>Figure 1.</strong>
+                    Comparison of Shifted MCBF-QP, Shifted CBF-QP, and MPC-CBF (horizon = 20) in a challenging
+                    dynamic social navigation task. Blue contours in the first-column images indicate the isosurface
+                    geodesically approximated to select the proper obstacle exit strategy \( \phi(x, \bar{h}) \) in
+                    MCBF-QP,shown by the red arrow.
+                  </figcaption>
+                </figure>
+              </div>
+
+            </div>
+          </section>
+        </div>
+    </section>
+
+    <section class="hero subtle-gray" id="hardware-experiments">
+      <div class="hero-body">
+        <div class="container">
+
+          <div class="has-text-left">
+            <h2 class="title is-2 has-text-link">Hardware Experiment</h2>
+          </div>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+
+                <h2 class="title is-3 has-text-centered">Static Concave Obstacles</h2>
+
+                <div class="columns is-centered is-variable is-8">
+
+                  <div class="column is-5 has-text-centered">
+                    <video controls muted loop preload="metadata" style="width:100%; height:auto;">
+                      <source src="static/videos/under_hardware_SCBF.mp4" type="video/mp4">
+                    </video>
+                    <p class="subtitle is-6">Video 1: Shifted CBF-QP</p>
+                  </div>
+
+                  <div class="column is-5 has-text-centered">
+                    <video controls muted loop preload="metadata" style="width:100%; height:auto;">
+                      <source src="static/videos/under_hardware_SMCBF.mp4" type="video/mp4">
+                    </video>
+                    <p class="subtitle is-6">Video 2: Shifted on-Manifold MCBF-QP</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+
+                <h2 class="title is-3 has-text-centered">Dynamic Adversarial Attacks</h2>
+
+                <div class="columns is-centered is-variable is-8">
+
+                  <div class="column is-5 has-text-centered">
+                    <video controls muted loop preload="metadata" style="width:100%; height:auto;">
+                      <source src="static/videos/under_hardware_SCBF_dynamic.mp4" type="video/mp4">
+                    </video>
+                    <p class="subtitle is-6">Video 1: Shifted CBF-QP</p>
+                  </div>
+
+                  <div class="column is-5 has-text-centered">
+                    <video controls muted loop preload="metadata" style="width:100%; height:auto;">
+                      <source src="static/videos/under_hardware_SMCBF_dynamic.mp4" type="video/mp4">
+                    </video>
+                    <p class="subtitle is-6">Video 2: Shifted on-Manifold MCBF-QP</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+
+                <h2 class="title is-3 has-text-centered">Soical Navigation</h2>
+
+                <div class="columns is-centered is-variable is-8">
+
+                  <div class="column is-5 has-text-centered">
+                    <video controls muted loop preload="metadata" style="width:100%; height:auto;">
+                      <source src="static/videos/social_hardware_SCBF_dynamic.mp4" type="video/mp4">
+                    </video>
+                    <p class="subtitle is-6">Video 1: Shifted CBF-QP</p>
+                  </div>
+
+                  <div class="column is-5 has-text-centered">
+                    <video controls muted loop preload="metadata" style="width:100%; height:auto;">
+                      <source src="static/videos/social_hardware_SMCBF_dynamic.mp4" type="video/mp4">
+                    </video>
+                    <p class="subtitle is-6">Video 2: Shifted on-Manifold MCBF-QP</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="hero is-small">
+            <div class="hero-body">
+              <div class="container">
+
+                <div class="has-text-centered">
+                  <h2 class="title is-3">Mixed Environment</h2>
+
+                  <video controls muted loop preload="metadata" style="max-width:60%; height:auto; margin-top:1rem;">
+                    <source src="static/videos/valid_hardware_SMCBF.mp4" type="video/mp4">
+                  </video>
+                  <p class="subtitle is-5">Video: Shifted on-Manifold MCBF-QP Demonstration through 5-Trial Validation
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+    </section>
+
+
+
+    <!-- Paper poster -->
+    <!-- <section class="hero is-small subtle-gray">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Poster</h2>
+      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
+          </iframe>
+        
+      </div>
+    </div>
+  </section> -->
+    <!--End paper poster -->
+
+    <section class="hero is-small" id="results-summary">
+      <div class="hero-body">
+        <div class="container">
+          <div class="has-text-centered">
+            <h2 class="title is-3">Results Summary</h2>
+          </div>
+
+
+          <figure class="has-text-centered">
+            <img src="static/images/table.svg" alt="table" loading="lazy"
+              style="display:block; margin:0 auto; width:90%;" />
+
+            <figcaption class="subtitle is-5" style="text-align: left;">
+              <strong>Figure 2.</strong>
+              Spider plot summarizing controller performance in hospital navigation at 20~Hz. Metrics include average
+              travel duration, Safe %, Reached %, and average number of infeasible QP instances per trajectory. Values
+              are normalized between the center and outermost layer, where a larger radial extent denotes better
+              performance.
+            </figcaption>
+          </figure>
+        </div>
+
+      </div>
+    </section>
+
+    <!--BibTex citation -->
+    <section class="section" id="bibtex">
+      <div class="container is-max-desktop content">
+        <div class="bibtex-header">
+          <h2 class="title">BibTeX</h2>
+          <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+            <i class="fas fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre id="bibtex-code"><code>@misc{xue2026minimacollisionscombiningmodulation,
+      title={No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance}, 
+      author={Yifan Xue and Nadia Figueroa},
+      year={2026},
+      eprint={2502.14238},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2502.14238},
+    }</code></pre>
+      </div>
+    </section>
+    <!--End BibTex citation -->
+
+
+    <footer class="footer">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <div class="content">
+
+              <p>
+                This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+                  target="_blank">Academic Project Page Template</a> which was adopted from the <a
+                  href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+                You are free to borrow the source code of this website, we just ask that you link back to this page in
+                the footer. <br> This website is licensed under a <a rel="license"
+                  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+                  Commons Attribution-ShareAlike 4.0 International License</a>.
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Statcounter tracking code -->
+
+    <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+</body>
+
+</html>
