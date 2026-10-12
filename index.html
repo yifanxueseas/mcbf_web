@@ -93,8 +93,8 @@
 
 
   <!-- TODO: Replace with your paper title and authors -->
-  <title>No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic
-    Collision Avoidance - Yifan Xue and Nadia Figueroa | Academic Research</title>
+  <title>No Undesirable Equilibria, No Collisions: Combining Modulation and Control Barrier Functions for Liveness and
+    Safety in Dynamic Collision Avoidance - Yifan Xue and Nadia Figueroa | Academic Research</title>
 
   <!-- Favicon and App Icons -->
   <link rel="icon" type="image/x-icon" href="static/images/logo.ico">
@@ -165,9 +165,9 @@
     "url": "https://yifanxueseas.github.io/mcbf_controller/",
     "image": "https://github.com/yifanxueseas/mcbf_controller/tree/gh-pages/static/images/social_preview.png",
     "keywords": ["concave obstacles", "dynamical systems", "control barrier functions", "real-time motion and path planning", "dynamic obstacles", "collision avoidance", "nonholonomic motion planning"],
-    "abstract": "Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control due to their applicability to general control-affine systems and their ability to enforce constraints through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference, and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with few or no local minima, but they lack a principled mechanism for enforcing input constraints and are typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general control-affine systems operating in dynamic, cluttered environments.",
+    "abstract": "Control Barrier Function Quadratic Programs (CBF-QPs) provide formal safety guarantees for general control-affine systems and accommodate actuation constraints, but do not inherently guarantee liveness, i.e., sustained progress toward and convergence to a goal. They may admit undesirable equilibria or dysfunctional circulation that impede goal convergence. In contrast, Modulation of Dynamical Systems (Mod-DS) promotes liveness through geometric reshaping of nominal vector fields, but is primarily suited to fully actuated systems and does not directly accommodate general actuation constraints. We establish theoretical connections between these paradigms, showing that normal Mod-DS is a special case of CBF-QP and that reference Mod-DS is linked to CBF-QP through a shared formulation. These connections motivate the Modulated CBF-QP (MCBF-QP) framework, which incorporates geometric guidance from Mod-DS into CBF-QPs to enhance liveness while retaining formal safety and control-affine generality. We develop reference MCBF-QP, which reduces undesirable equilibria and dysfunctional circulation for star-shaped obstacles, and on-manifold MCBF-QP, which eliminates undesirable equilibria and reduces dysfunctional circulation for arbitrarily shaped concave obstacles. Although no Lyapunov function is explicitly constructed, we prove that the tangent guidance constraint introduced into the CBF-QP formulation implicitly enforces the decrease condition of a hybrid Lyapunov function, yielding asymptotic goal convergence and thus liveness under the stated assumptions. Extensive simulation and hardware experiments demonstrate safe and live obstacle avoidance with the proposed MCBF-QP framework in static and dynamic environments.",
     "citation": "@misc{xue2026minimacollisionscombiningmodulation,
-      title={No Minima, No Collisions: Combining Modulation and Control Barrier Function Strategies for Feasible Dynamic Collision Avoidance}, 
+      title={No Undesirable Equilibria, No Collisions: Combining Modulation and Control Barrier Functions for Liveness and Safety in Dynamic Collision Avoidance}, 
       author={Yifan Xue and Nadia Figueroa},
       year={2026},
       eprint={2502.14238},
@@ -422,12 +422,13 @@
     <section class="hero teaser">
       <div class="container is-max-desktop">
         <div class="hero-body">
-          <!-- TODO: Replace with your teaser video -->
-          <video poster="" id="tree" autoplay controls muted loop height="100%" preload="metadata">
-            <!-- TODO: Add your video file path here -->
-            <source src="static/videos/mcbf_submission.mp4" type="video/mp4">
-          </video>
-          <!-- TODO: Replace with your video description -->
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/watch?v=pQoEoLKulWM" title="MCBF-QP Experiment Video" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+          </div>
+
           <h2 class="subtitle has-text-centered">
             We validate the proposed MCBF-QP controllers in simulated hospital settings and in real-world experiments on
             fully actuated Ridgeback robots and underactuated Fetch platforms. Across all evaluations, Modulated CBF-QPs
@@ -478,18 +479,24 @@
             <div class="content has-text-justified">
               <!-- TODO: Replace with your paper abstract -->
               <p>
-                Control Barrier Function Quadratic Programs (CBF-QPs) are central to reactive safety-critical control
-                due to their applicability to general control-affine systems and their ability to enforce constraints
-                through optimization. Yet, they often introduce spurious local equilibria that hinder convergence to
-                task goals. In contrast, Modulation of Dynamical Systems (Mod-DS) methods (including normal, reference,
-                and on-manifold variants) geometrically reshape nominal vector fields to achieve obstacle avoidance with
-                few or no local minima, but they lack a principled mechanism for enforcing input constraints and are
-                typically limited to fully actuated systems. Revisiting the theoretical foundations of both approaches
-                showed that, despite their seemingly different constructions, the normal Mod-DS is a special case of the
-                CBF-QP, and the reference Mod-DS is linked to the CBF-QP through a single equation. These connections
-                motivate our Modulated CBF-QP (MCBF-QP) framework, which introduces reference and on-manifold modulation
-                variants that reduce or fully eliminate the spurious equilibria inherent to CBF-QPs for general
-                control-affine systems operating in dynamic, cluttered environments.
+                Control Barrier Function Quadratic Programs (CBF-QPs) provide formal safety guarantees for general
+                control-affine systems and accommodate actuation constraints, but do not inherently guarantee
+                liveness, i.e., sustained progress toward and convergence to a goal. They may admit undesirable
+                equilibria or dysfunctional circulation that impede goal convergence. In contrast, Modulation of
+                Dynamical Systems (Mod-DS) promotes liveness through geometric reshaping of nominal vector fields, but
+                is primarily suited to fully actuated systems and does not directly accommodate general actuation
+                constraints. We establish theoretical connections between these paradigms, showing that normal Mod-DS is
+                a special case of CBF-QP and that reference Mod-DS is linked to CBF-QP through a shared formulation.
+                These connections motivate the Modulated CBF-QP (MCBF-QP) framework, which incorporates
+                geometric guidance from Mod-DS into CBF-QPs to enhance liveness while retaining formal safety and
+                control-affine generality. We develop reference MCBF-QP, which reduces undesirable equilibria and
+                dysfunctional circulation for star-shaped obstacles, and on-manifold MCBF-QP, which eliminates
+                undesirable equilibria and reduces dysfunctional circulation for arbitrarily shaped concave obstacles.
+                Although no Lyapunov function is explicitly constructed, we prove that the tangent guidance constraint
+                introduced into the CBF-QP formulation implicitly enforces the decrease condition of a hybrid Lyapunov
+                function, yielding asymptotic goal convergence and thus liveness under the stated assumptions. Extensive
+                simulation and hardware experiments demonstrate safe and live obstacle avoidance with the proposed
+                MCBF-QP framework in static and dynamic environments.
               </p>
             </div>
           </div>
